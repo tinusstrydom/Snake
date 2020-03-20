@@ -18,13 +18,14 @@ public class Main extends JFrame{
 		add(board);
 		//set title for frame
 		setTitle("Snake");
-		//set size for frame
-		setSize(300, 300);
-		//set default for close button of frame
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//
+		setResizable(false);
+		//
+		pack();
 		//set location on screen(null centers it)
 		setLocationRelativeTo(null);
-		
+		//set default for close button of frame
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	//Main Method
 	public static void main(String[] args) {
