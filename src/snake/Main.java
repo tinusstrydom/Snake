@@ -1,11 +1,12 @@
 package snake;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
-//Imports
 import javax.swing.JFrame;
 
 public class Main extends JFrame{
+	//Variables & Constants
 	public Board board = new Board();
 	
 	//Constructor Method
@@ -23,13 +24,15 @@ public class Main extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//set location on screen(null centers it)
 		setLocationRelativeTo(null);
+		
 	}
 	//Main Method
 	public static void main(String[] args) {
+		//EventQueue call blocks until pending events 
+		//have been processed
 		EventQueue.invokeLater(() -> {
 			Main main = new Main();
 			main.setVisible(true);
 		});
-
 	}
 }
