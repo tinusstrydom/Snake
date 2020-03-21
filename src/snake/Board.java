@@ -5,21 +5,19 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 //Board class (Extends JPanel )
-public class Board extends JPanel implements Runnable{
+public class Board extends JPanel implements Runnable, ActionListener{
 	//Constants 
-	//Width and height of panel and init spot for x and y
-	private final int BRDWIDTH = 300;
-	private final int BRDHEIGHT = 300;
-	private final int INIT_X = 0;
-	private final int INIT_Y = 0;
-	//delay for the speed 
-	private final int DELAY = 140;
+	private Snake snake;
+	private final int DELAY = 25;
 	
 	private Image head;
 	private Thread animator;
@@ -28,22 +26,18 @@ public class Board extends JPanel implements Runnable{
 	//Constructor Method
 	public Board() {
 		initBoard();
-		
 	}
 	public void initBoard() {
+		//add key listener
+		addKeyListener(new TAdapter());
 		//set background to black
 		setBackground(Color.lightGray);
+		//Set the focusable state of component
+		setFocusable(true);
 		//Set the preferred size
-		setPreferredSize(new Dimension(BRDWIDTH, BRDHEIGHT));
-		loadImg();
-		x = INIT_X;
-		y = INIT_Y;
+		snake = new Snake();
 	}
-	//load image
-	private void loadImg() {
-		ImageIcon headImg = new ImageIcon("src/img/apple.png");
-		head = headImg.getImage();
-	}
+	
 	//called after jpanel has been added to jframe
 	//used for various initialisation tasks
 	@Override
@@ -57,18 +51,16 @@ public class Board extends JPanel implements Runnable{
 	public void paint(Graphics g) {
 		super.paint(g);
 		drawHead(g);
-	}
-	private void drawHead(Graphics g) {
-		g.drawImage(head, x, y, this);
 		Toolkit.getDefaultToolkit().sync();
 	}
+	private void drawHead(Graphics g) {
+		g.drawImage(snake.getImage(), snake.getX(), snake.getY(), this);
+	}
 	private void cycle() {
-		x += 1;
-		y += 1;
-		if(y > BRDHEIGHT) {
-			y = INIT_Y;
-			x = INIT_X;
-		}
+		step();
+	}
+	private void step() {
+		snake.move();	
 	}
 	//execute in specific intervals, 
 	//run called once reason for while loop in run method
@@ -81,12 +73,12 @@ public class Board extends JPanel implements Runnable{
 		
 		while(true) {
 			cycle();
-			repaint();
+			repaint(snake.getX()-1, snake.getY()-1,snake.getWidth()+2, snake.getHeight()+2);
 			//compute system time for constant speed(game run smoothly)
 			timeDiff = System.currentTimeMillis() - beforeTime;
 			sleep = DELAY - timeDiff;
 			if(sleep < 0) {
-				sleep = 2;
+				sleep = 1;
 			}
 			try {
 				Thread.sleep(sleep);
@@ -95,6 +87,17 @@ public class Board extends JPanel implements Runnable{
 				JOptionPane.showMessageDialog(this, msg, "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			beforeTime = System.currentTimeMillis();
+		}
+	}
+	
+	private class TAdapter extends KeyAdapter{
+		@Override
+		public void keyReleased(KeyEvent e) {
+			snake.keyReleased(e);
+		}
+		@Override
+		public void keyPressed(KeyEvent e) {
+			snake.keyPressed(e);
 		}
 	}
 }
