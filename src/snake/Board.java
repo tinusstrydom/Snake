@@ -3,6 +3,7 @@ package snake;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
@@ -48,13 +49,14 @@ public class Board extends JPanel implements Runnable, ActionListener{
 	}
 	//paint image to panel
 	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		drawHead(g);
 		Toolkit.getDefaultToolkit().sync();
 	}
 	private void drawHead(Graphics g) {
-		g.drawImage(snake.getImage(), snake.getX(), snake.getY(), this);
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.drawImage(snake.getImage(), snake.getX(), snake.getY(), this);
 	}
 	private void cycle() {
 		step();
@@ -73,7 +75,7 @@ public class Board extends JPanel implements Runnable, ActionListener{
 		
 		while(true) {
 			cycle();
-			repaint(snake.getX()-1, snake.getY()-1,snake.getWidth()+2, snake.getHeight()+2);
+			repaint();
 			//compute system time for constant speed(game run smoothly)
 			timeDiff = System.currentTimeMillis() - beforeTime;
 			sleep = DELAY - timeDiff;
