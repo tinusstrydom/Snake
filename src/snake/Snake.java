@@ -6,34 +6,15 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 
 public class Snake {
+
 	private int dx, dy, w, h;
-	private int x = 40;
-	private int y = 60;
-	private int xA = 30;
-	private int yA = 50;
-	private int xD = 20;
-	private int yD = 40;
+	private int xApple = 30;
+	private int yApple = 50;
+	private int xDot = 20;
+	private int yDot = 40;
 	private Image head, dot, apple;
 	
-	public Snake() {
-		loadImg();
-	}
 	
-	//load image
-	private void loadImg() {
-		//load and get image
-		ImageIcon headImg = new ImageIcon("src/img/head.png");
-		head = headImg.getImage();
-		ImageIcon dotImg = new ImageIcon("src/img/dot.png");
-		dot =  dotImg.getImage();
-		ImageIcon appleImg = new ImageIcon("src/img/apple.png");
-		apple = appleImg.getImage();
-	}
-	public void move(){
-		//set x and y to dx and dy  
-		x += dx;
-		y += dy;
-	}
 	public int getX() {
 		return x;
 	}
@@ -41,16 +22,16 @@ public class Snake {
 		return y;
 	}
 	public int getXA() {
-		return xA;
+		return xApple;
 	}
 	public int getYA() {
-		return yA;
+		return yApple;
 	}
 	public int getXD() {
-		return xD;
+		return xDot;
 	}
 	public int getYD() {
-		return yD;
+		return yDot;
 	}
 	public int getWidth() {
 		return w;
@@ -67,35 +48,5 @@ public class Snake {
 	public Image getDot() {
 		return dot;
 	}
-	//Key pressed and key release
-	public void keyPressed(KeyEvent e) {
-		int key = e.getKeyCode();  
-		if(key == KeyEvent.VK_LEFT) {
-			dx = -2;
-		}
-		if(key == KeyEvent.VK_RIGHT) {
-			dx = 2;
-		}
-		if(key == KeyEvent.VK_UP) {
-			dy = -2;
-		}
-		if(key == KeyEvent.VK_DOWN) {
-			dy = 2;
-		}
-	}
-	public void keyReleased(KeyEvent e) {
-		int key = e.getKeyCode();  
-		if(key == KeyEvent.VK_LEFT) {
-			dx = 0;
-		}
-		if(key == KeyEvent.VK_RIGHT) {
-			dx = 0;
-		}
-		if(key == KeyEvent.VK_UP) {
-			dy = 0;
-		}
-		if(key == KeyEvent.VK_DOWN) {
-			dy = 0;
-		}
-	}
+	
 }

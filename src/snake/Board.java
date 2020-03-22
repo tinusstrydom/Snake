@@ -17,37 +17,44 @@ import javax.swing.JPanel;
 
 //Board class (Extends JPanel )
 public class Board extends JPanel implements Runnable, ActionListener{
-	//Variable and Constants 
-	//Set variable for the Snake class
-	private Snake snake;
 	
 	//Set size for the board width and height
 	private final int BRDWIDTH = 300;
 	private final int BRDHEIGHT = 300;
 	
 	//Set the size of the snake body dot
-	private final int DOT = 10;
-	
+	private final int DOT_SIZE = 10;
+		
 	//Set the amount of dots on the board((300*300)/(10*10))
 	private final int ALL_DOTS = 900;
-	
+			
 	//Set a rand position for the apple
 	private final int RAND_POS = 29;
-	
+			
 	//Set the speed of the game
-	private final int DELAY = 120;
+	private final int DELAY = 140;
 	
 	//Create 2 arrays for coordinates of all joints (x and y)
 	private final int x[] = new int[ALL_DOTS];
 	private final int y[] = new int[ALL_DOTS];
+		
+	//Set boolean values
+	//Stop snake from going back on itself
+	private boolean left = false;
+	private boolean right = true;
+	private boolean up = false;
+	private boolean down = true;
+		
+	private int dots, apple_x, apple_y;
+	private Image head, dot, apple;
 	
-	private Image head;
 	private Thread animator;
 	
 	//Constructor Method
 	public Board() {
 		initBoard();
 	}
+	
 	public void initBoard() {
 		//add key listener
 		addKeyListener(new TAdapter());
@@ -55,10 +62,34 @@ public class Board extends JPanel implements Runnable, ActionListener{
 		setBackground(Color.lightGray);
 		//Set the focusable state of component
 		setFocusable(true);
-		//Set the preferred size
-		snake = new Snake();
+		//Set the board dimensions
+		setPreferredSize(new Dimension(BRDWIDTH, BRDHEIGHT));
+		
+		//call snake class for the images
+		loadImg();
+		initGame();
 	}
 	
+	//load image
+	private void loadImg() {
+		//load and get image
+		ImageIcon headImg = new ImageIcon("src/img/head.png");
+		head = headImg.getImage();
+		ImageIcon dotImg = new ImageIcon("src/img/dot.png");
+		dot =  dotImg.getImage();
+		ImageIcon appleImg = new ImageIcon("src/img/apple.png");
+		apple = appleImg.getImage();
+	}
+
+	//Set initial game settings
+	private void initGame() {
+		dots = 3;
+		for(int i = 0; i < dots; i++) {
+			x[i] = 50 - i * 10;
+			y[i] = 50;
+		}
+		//locateApple();
+	}
 	//called after jpanel has been added to jframe
 	//used for various initialisation tasks
 	@Override
@@ -71,28 +102,40 @@ public class Board extends JPanel implements Runnable, ActionListener{
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		drawHead(g);
-		drawApple(g);
-		drawDot(g);
+		drawSnake(g);
 		Toolkit.getDefaultToolkit().sync();
 	}
-	private void drawHead(Graphics g) {
+	private void drawSnake(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawImage(snake.getHead(), snake.getX(), snake.getY(), this);
-	}
-	private void drawApple(Graphics g) {
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawImage(snake.getApple(), snake.getXA(), snake.getYA(), this);
-	}
-	private void drawDot(Graphics g) {
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawImage(snake.getDot(), snake.getXD(), snake.getYD(), this);
+		 for (int z = 0; z < dots; z++) {
+             if (z == 0) {
+                 g2d.drawImage(head, x[z], y[z], this);
+             } else {
+                 g2d.drawImage(dot, x[z], y[z], this);
+             }
+		 }
 	}
 	private void cycle() {
-		step();
+		move();
 	}
-	private void step() {
-		snake.move();	
+	private void move() {
+		for(int i = dots; i > 0 ; i--) {
+			x[i] = x[(i-1)];
+			y[i] = y[(i-1)];
+		}
+		
+		if(left) {
+			x[0] -= DOT_SIZE;
+		}
+		if(right) {
+			x[0] += DOT_SIZE;
+		}
+		if(up) {
+			y[0] -= DOT_SIZE;
+		}
+		if(down) {
+			y[0] += DOT_SIZE;
+		}
 	}
 	//execute in specific intervals, 
 	//run called once reason for while loop in run method
@@ -123,13 +166,31 @@ public class Board extends JPanel implements Runnable, ActionListener{
 	}
 	
 	private class TAdapter extends KeyAdapter{
-		@Override
-		public void keyReleased(KeyEvent e) {
-			snake.keyReleased(e);
-		}
+		//Key pressed 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			snake.keyPressed(e);
+			int key = e.getKeyCode();  
+			
+			if((key == KeyEvent.VK_LEFT) && (!right)) {
+				left = true;
+				up = false;
+				down = false;
+			}
+			if((key == KeyEvent.VK_RIGHT) && (!left)) {
+				right = true;
+				up = false;
+				down = false;
+			}
+			if((key == KeyEvent.VK_UP) && (!down)) {
+				up = true;
+				left = false;
+				right = false;
+			}
+			if((key == KeyEvent.VK_DOWN) && (!up)){
+				down = true;
+				left = false;
+				right = false;
+			}
 		}
 	}
 
