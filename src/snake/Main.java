@@ -6,7 +6,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 public class Main extends JFrame{
-	//Variables & Constants
+	//create new board class
 	public Board board = new Board();
 	
 	//Constructor Method
@@ -18,10 +18,12 @@ public class Main extends JFrame{
 		add(board);
 		//set title for frame
 		setTitle("Snake");
-		//Set size
-		setSize(300, 300);
-		//
+		//Set if frame is resizable by user
 		setResizable(false);
+		//call pack method to fit the 
+		//preferred size and layout of subcomponents
+		//***imortant head might not work correctly with collision of bottom and right borders
+		pack();
 		//set location on screen(null centers it)
 		setLocationRelativeTo(null);
 		//set default for close button of frame
