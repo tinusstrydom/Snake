@@ -1,6 +1,5 @@
 package snake;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -16,14 +15,14 @@ public class Main extends JFrame{
 	public void initUI() {
 		//add board to the initial UI
 		add(board);
-		//set title for frame
-		setTitle("Snake");
 		//Set if frame is resizable by user
 		setResizable(false);
 		//call pack method to fit the 
 		//preferred size and layout of subcomponents
 		//***important head might not work correctly with collision of bottom and right borders
 		pack();
+		//set title for frame
+		setTitle("Snake");
 		//set location on screen(null centers it)
 		setLocationRelativeTo(null);
 		//set default for close button of frame
@@ -34,7 +33,7 @@ public class Main extends JFrame{
 		//EventQueue call blocks until pending events 
 		//have been processed
 		EventQueue.invokeLater(() -> {
-			Main main = new Main();
+			JFrame main = new Main();
 			main.setVisible(true);
 		});
 	}
