@@ -22,7 +22,7 @@ public class Main extends JFrame{
 		setResizable(false);
 		//call pack method to fit the 
 		//preferred size and layout of subcomponents
-		//***imortant head might not work correctly with collision of bottom and right borders
+		//***important head might not work correctly with collision of bottom and right borders
 		pack();
 		//set location on screen(null centers it)
 		setLocationRelativeTo(null);

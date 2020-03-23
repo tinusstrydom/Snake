@@ -2,6 +2,8 @@ package snake;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -91,9 +93,7 @@ public class Board extends JPanel implements Runnable, ActionListener{
 			x[i] = 50 - i * 10;
 			y[i] = 50;
 		}
-		//locateApple();
-		
-		
+		randomApple();
 	}
 	//called after jpanel has been added to jframe
 	//used for various initialisation tasks
@@ -109,11 +109,13 @@ public class Board extends JPanel implements Runnable, ActionListener{
 		super.paintComponent(g);
 		drawSnake(g);
 	}
+	//draw snake method draw random apple
+	//
 	private void drawSnake(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		
 		if(inGame) {
-			g2d.drawImage(apple, 50, 50, this);
+			g2d.drawImage(apple, apple_x, apple_y, this);
 			for (int i = 0; i < dots; i++) {
 	             if (i == 0) {
 	            	 g2d.drawImage(head, x[i], y[i], this);   
@@ -122,10 +124,62 @@ public class Board extends JPanel implements Runnable, ActionListener{
 	             }
 			 }
 			Toolkit.getDefaultToolkit().sync();
+		}else {
+			gameOver(g);
 		}
 	}
+	private void randomApple() {
+		int r = (int) (Math.random() * RAND_POS);
+        apple_x = ((r * DOT_SIZE));
+
+        r = (int) (Math.random() * RAND_POS);
+        apple_y = ((r * DOT_SIZE));
+	}
+	//check apple checks id head has collide with apple 
+	//if true add dot to snake and call random apple
+	private void checkApple(){
+		if ((x[0] == apple_x) && (y[0] == apple_y)) {
+	        dots++;
+	        randomApple();
+	    }
+	}
+	private void checkCollision() {
+        for (int i = dots; i > 0; i--) {
+            if ((i > 4) && (x[0] == x[i]) && (y[0] == y[i])) {
+                inGame = false;
+            }
+        }
+        if (y[0] >= BRDHEIGHT) {
+            inGame = false;
+        }
+        if (y[0] < 0) {
+            inGame = false;
+        }
+        if (x[0] >= BRDWIDTH) {
+            inGame = false;
+        }
+        if (x[0] < 0) {
+            inGame = false;
+        }
+        if (!inGame) {
+           
+        }
+    }
+	//Game over method
+	private void gameOver(Graphics g) {
+        
+        String msg = "Game Over";
+        Font small = new Font("Helvetica", Font.BOLD, 14);
+        FontMetrics metr = getFontMetrics(small);
+
+        g.setColor(Color.white);
+        g.setFont(small);
+        g.drawString(msg, (BRDWIDTH - metr.stringWidth(msg)) / 2, BRDHEIGHT / 2);
+    }
 	private void cycle() {
 		if(inGame) {
+			checkApple();
+			checkCollision();
 			move();
 		}
 	}
