@@ -29,7 +29,7 @@ public class Board extends JPanel implements Runnable, ActionListener{
 	private final int ALL_DOTS = 900;
 			
 	//Set a rand position for the apple
-	private final int RAND_POS = 29;
+	private final int RAND_POS = 50;
 			
 	//Set the speed of the game
 	private final int DELAY = 140;
@@ -44,6 +44,8 @@ public class Board extends JPanel implements Runnable, ActionListener{
 	private boolean right = true;
 	private boolean up = false;
 	private boolean down = true;
+	
+	private boolean inGame = true; 
 		
 	private int dots, apple_x, apple_y;
 	private Image head, dot, apple;
@@ -65,8 +67,9 @@ public class Board extends JPanel implements Runnable, ActionListener{
 		//Set the board dimensions
 		setPreferredSize(new Dimension(BRDWIDTH, BRDHEIGHT));
 		
-		//call snake class for the images
+		//Call load img method
 		loadImg();
+		//Call init game method
 		initGame();
 	}
 	
@@ -89,6 +92,8 @@ public class Board extends JPanel implements Runnable, ActionListener{
 			y[i] = 50;
 		}
 		//locateApple();
+		
+		
 	}
 	//called after jpanel has been added to jframe
 	//used for various initialisation tasks
@@ -103,27 +108,32 @@ public class Board extends JPanel implements Runnable, ActionListener{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		drawSnake(g);
-		Toolkit.getDefaultToolkit().sync();
 	}
 	private void drawSnake(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		 for (int z = 0; z < dots; z++) {
-             if (z == 0) {
-                 g2d.drawImage(head, x[z], y[z], this);
-             } else {
-                 g2d.drawImage(dot, x[z], y[z], this);
-             }
-		 }
+		
+		if(inGame) {
+			g2d.drawImage(apple, 50, 50, this);
+			for (int i = 0; i < dots; i++) {
+	             if (i == 0) {
+	            	 g2d.drawImage(head, x[i], y[i], this);   
+	             }else {
+	                 g2d.drawImage(dot, x[i], y[i], this);
+	             }
+			 }
+			Toolkit.getDefaultToolkit().sync();
+		}
 	}
 	private void cycle() {
-		move();
+		if(inGame) {
+			move();
+		}
 	}
 	private void move() {
 		for(int i = dots; i > 0 ; i--) {
 			x[i] = x[(i-1)];
 			y[i] = y[(i-1)];
 		}
-		
 		if(left) {
 			x[0] -= DOT_SIZE;
 		}
