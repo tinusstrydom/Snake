@@ -183,6 +183,11 @@ public class Board extends JPanel implements Runnable, ActionListener{
 			move();
 		}
 	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		
+	}
 	private void move() {
 		for(int i = dots; i > 0 ; i--) {
 			x[i] = x[(i-1)];
@@ -257,5 +262,4 @@ public class Board extends JPanel implements Runnable, ActionListener{
 			}
 		}
 	}
-
 }
